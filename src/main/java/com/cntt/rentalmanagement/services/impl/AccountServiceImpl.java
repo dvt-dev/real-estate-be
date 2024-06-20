@@ -44,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
     public Page<User> getAllAccount(String keyword, Integer pageNo, Integer pageSize) {
         int page = pageNo == 0 ? pageNo : pageNo - 1;
         Pageable pageable = PageRequest.of(page, pageSize);
-        return userRepository.searchingAccount(keyword,pageable);
+        return userRepository.searchingAccount(keyword, pageable);
     }
 
     @Override
@@ -53,7 +53,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public MessageResponse sendEmailForRentaler(Long id, SendEmailRequest sendEmailRequest) throws MessagingException, IOException {
+    public MessageResponse sendEmailForRentaler(Long id, SendEmailRequest sendEmailRequest)
+            throws MessagingException, IOException {
         sendEmailFromTemplate(sendEmailRequest);
         return MessageResponse.builder().message("Gửi mail thành công").build();
     }
@@ -82,22 +83,23 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public MessageResponse sendEmailForRentaler(SendEmailRequest sendEmailRequest) throws MessagingException, IOException {
+    public MessageResponse sendEmailForRentaler(SendEmailRequest sendEmailRequest)
+            throws MessagingException, IOException {
         sendEmailFromTemplateForContact(sendEmailRequest);
         return MessageResponse.builder().message("Liện hệ đã được gửi thành công").build();
     }
 
     @Override
-    public MessageResponse sendEmailOfCustomer(SendEmailRequest sendEmailRequest) throws MessagingException, IOException {
+    public MessageResponse sendEmailOfCustomer(SendEmailRequest sendEmailRequest)
+            throws MessagingException, IOException {
         sendEmailFromTemplateForCustomer(sendEmailRequest);
         return MessageResponse.builder().message("Liên hệ thành công.").build();
     }
 
-
     public void sendEmailFromTemplate(SendEmailRequest sendEmailRequest) throws MessagingException, IOException {
         MimeMessage message = mailSender.createMimeMessage();
 
-        message.setFrom(new InternetAddress("trungdang82678@gmail.com"));
+        message.setFrom(new InternetAddress("tuando170402@gmail.com"));
         message.setRecipients(MimeMessage.RecipientType.TO, sendEmailRequest.getToEmail());
         message.setSubject(sendEmailRequest.getTitle());
 
@@ -105,7 +107,7 @@ public class AccountServiceImpl implements AccountService {
         String htmlTemplate = readFile("send-email.html");
 
         // Replace placeholders in the HTML template with dynamic values
-        htmlTemplate = htmlTemplate.replace("NAM NGHIEM", sendEmailRequest.getNameOfRentaler());
+        htmlTemplate = htmlTemplate.replace("TUAN DO", sendEmailRequest.getNameOfRentaler());
         htmlTemplate = htmlTemplate.replace("DESCRIPTION", sendEmailRequest.getDescription());
 
         // Set the email's content to be the HTML template
@@ -114,9 +116,9 @@ public class AccountServiceImpl implements AccountService {
         mailSender.send(message);
     }
 
-    public void sendEmailFromTemplateForCustomer(SendEmailRequest sendEmailRequest) throws MessagingException, IOException {
+    public void sendEmailFromTemplateForCustomer(SendEmailRequest sendEmailRequest)
+            throws MessagingException, IOException {
         MimeMessage message = mailSender.createMimeMessage();
-
 
         message.setRecipients(MimeMessage.RecipientType.TO, sendEmailRequest.getToEmail());
         message.setSubject("Tin thuê phòng");
@@ -125,8 +127,9 @@ public class AccountServiceImpl implements AccountService {
         String htmlTemplate = readFile("send-email.html");
 
         // Replace placeholders in the HTML template with dynamic values
-        htmlTemplate = htmlTemplate.replace("NAM NGHIEM", sendEmailRequest.getNameOfRentaler());
-        htmlTemplate = htmlTemplate.replace("DESCRIPTION", sendEmailRequest.getDescription() + "Email:" + sendEmailRequest.getTitle());
+        htmlTemplate = htmlTemplate.replace("TUAN DO", sendEmailRequest.getNameOfRentaler());
+        htmlTemplate = htmlTemplate.replace("DESCRIPTION",
+                sendEmailRequest.getDescription() + "Email:" + sendEmailRequest.getTitle());
 
         // Set the email's content to be the HTML template
         message.setContent(htmlTemplate, "text/html; charset=utf-8");
@@ -134,19 +137,21 @@ public class AccountServiceImpl implements AccountService {
         mailSender.send(message);
     }
 
-    public void sendEmailFromTemplateForContact(SendEmailRequest sendEmailRequest) throws MessagingException, IOException {
+    public void sendEmailFromTemplateForContact(SendEmailRequest sendEmailRequest)
+            throws MessagingException, IOException {
         MimeMessage message = mailSender.createMimeMessage();
 
         message.setFrom(new InternetAddress("trungdang82678@gmail.com"));
-        message.setRecipients(MimeMessage.RecipientType.TO, "dinhnam.nghiem.2611@gmail.com");
+        message.setRecipients(MimeMessage.RecipientType.TO, "tuando170402@gmail.com");
         message.setSubject(sendEmailRequest.getTitle());
 
         // Read the HTML template into a String variable
         String htmlTemplate = readFile("send-email.html");
 
         // Replace placeholders in the HTML template with dynamic values
-        htmlTemplate = htmlTemplate.replace("NAM NGHIEM", sendEmailRequest.getNameOfRentaler());
-        htmlTemplate = htmlTemplate.replace("DESCRIPTION", sendEmailRequest.getDescription() + ".Email: "+ sendEmailRequest.getToEmail());
+        htmlTemplate = htmlTemplate.replace("TUAN DO", sendEmailRequest.getNameOfRentaler());
+        htmlTemplate = htmlTemplate.replace("DESCRIPTION",
+                sendEmailRequest.getDescription() + ".Email: " + sendEmailRequest.getToEmail());
 
         // Set the email's content to be the HTML template
         message.setContent(htmlTemplate, "text/html; charset=utf-8");
